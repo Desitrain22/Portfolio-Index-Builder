@@ -12,10 +12,10 @@
       </tr>
       <tr>
         <td class="tdinput">
-          <input type="text" name="symbol" value="" />
+          <input type="text" name="symbol" value="AAPL" />
         </td>
         <td class="tdinput black">
-          <input type="number" name="weight" value="" />
+          <input type="number" step="0.01" name="weight" value="0.5" />
         </td>
       </tr>
     </table>
@@ -44,6 +44,7 @@
       weightInput = document.createElement("input");
       weightInput.setAttribute("type", "number");
       weightInput.setAttribute("name", "weight");
+      weightInput.setAttribute("step", "0.01");
       weight.appendChild(weightInput);
       newRow.appendChild(weight);
       table.appendChild(newRow);

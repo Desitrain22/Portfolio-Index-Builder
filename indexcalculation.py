@@ -5,7 +5,7 @@ pd.set_option("display.precision", 12)
 
 
 def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02")):
-    """Given a symbol and yfinance period, returns a series of daily returns (1 + %age) of the symbol over the course 
+    """Given a symbol and yfinance period, returns a series of daily returns (1 + %age) of the symbol over the course
     of the period"""
     return (
         yf.Ticker(ticker).history(period="max")["Close"][start_date:].pct_change() + 1
@@ -15,8 +15,8 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
 def weights(
     ticker_weights: list[str], start_date: pd.Timestamp = pd.Timestamp("2015-01-02")
 ):
-    """Given a dictionary of symbols and initial weights, returns a dataframe of all the adjusted weights of 
-    the portfolio over time. That is, the percentage of the portfolio each security takes over the course of 
+    """Given a dictionary of symbols and initial weights, returns a dataframe of all the adjusted weights of
+    the portfolio over time. That is, the percentage of the portfolio each security takes over the course of
     daily returns.
 
     .. code-block:: python
@@ -26,12 +26,12 @@ def weights(
     weights of an untouched portfolio
 
     Parameters:
-        ticker_weights (dict): a dictionary where keys are strings, and values are floating point weights. sum(values) 
-        should approach 1.0 start_date: A pandas timestamp with the start date of portfolio. This day will yield the 
+        ticker_weights (dict): a dictionary where keys are strings, and values are floating point weights. sum(values)
+        should approach 1.0 start_date: A pandas timestamp with the start date of portfolio. This day will yield the
         starting weights
 
     Returns:
-        A dataframe of daily portfolio weights, weight the initial weights designated at the start of the period 
+        A dataframe of daily portfolio weights, weight the initial weights designated at the start of the period
         provided
     """
     df = pd.DataFrame()
@@ -49,11 +49,11 @@ def etf_returns(
     start_date: pd.Timestamp = pd.Timestamp("2015-01-02"),
     index_base: float = 100.0,
 ):
-    """Given a dictionary of symbols and FIXED weights, a period, and the start value of the Index, returns a dataframe 
-    with weighted daily returns of the index ('ER' for 'Excess Returns'), weighted returns of each index component, 
+    """Given a dictionary of symbols and FIXED weights, a period, and the start value of the Index, returns a dataframe
+    with weighted daily returns of the index ('ER' for 'Excess Returns'), weighted returns of each index component,
     and the index value for each day from the base.
 
-    Note that this is under the behavior of daily targetted returns, and supports leverage. This does NOT account 
+    Note that this is under the behavior of daily targetted returns, and supports leverage. This does NOT account
     for dividend re-investment"""
     df = pd.DataFrame()
     for ticker in ticker_weights:
