@@ -12,35 +12,38 @@
       </tr>
       <tr>
         <td class="tdinput">
-          <input type="text" name="symbol1" id="symbol1" value="" />
+          <input type="text" name="symbol" value="" />
         </td>
         <td class="tdinput black">
-          <input type="number" name="weight1" id="weight1" value="" />
+          <input type="number" name="weight" value="" />
         </td>
       </tr>
     </table>
+    <button type="button" onclick="addRow()">Add Symbol</button>
+    <input type="submit" />
   </form>
   <br />
 
-  <button type="button" onclick="addRow()">Add Symbol</button>
   <script>
     function addRow() {
       var table = document.getElementById("myTable");
       var newRow = document.createElement("tr");
       var newTD, newTD2, symbol, symbolInput, weight, weightInput;
 
-      newRow.setAttribute("class", "unit-table");
+      //newRow.setAttribute("class", "unit-table");
       symbol = document.createElement("td");
       symbol.setAttribute("class", "tdinput");
       symbolInput = document.createElement("input");
       symbolInput.setAttribute("type", "text");
+      symbolInput.setAttribute("name", "symbol");
       symbol.appendChild(symbolInput);
       newRow.appendChild(symbol);
 
       weight = document.createElement("td");
-      weight.setAttribute("class", "tdinput");
+      weight.setAttribute("class", "tdinput black");
       weightInput = document.createElement("input");
       weightInput.setAttribute("type", "number");
+      weightInput.setAttribute("name", "weight");
       weight.appendChild(weightInput);
       newRow.appendChild(weight);
       table.appendChild(newRow);
