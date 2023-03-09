@@ -11,6 +11,7 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
     returns = (
         yf.Ticker(ticker).history(period="max")["Close"][start_date:].pct_change() + 1
     )
+    print(returns.index[0].tz)
     returns.index = returns.index.date
     index_range = mcal.date_range(
         mcal.get_calendar("NYSE").schedule(
@@ -18,7 +19,9 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
         ),
         frequency="1D",
     )
-    returns = returns.reindex(index_range.date).fillna(1) # fill_value argument has issues with different NaNs lol
+    returns = returns.reindex(index_range.date).fillna(
+        1
+    )  # fill_value argument has issues with different NaNs lol
     return returns
 
 
@@ -56,7 +59,7 @@ def weights(
 
 def etf_returns(
     ticker_weights: dict,
-    start_date: pd.Timestamp = pd.Timestamp("2015-01-02"),
+    start_date: pd.Timestamp = pd.Timestamp("2015-01-02", tz="America/New_York"),
     index_base: float = 100.0,
 ):
     """Given a dictionary of symbols and FIXED weights, a period, and the start value of the Index, returns a dataframe
