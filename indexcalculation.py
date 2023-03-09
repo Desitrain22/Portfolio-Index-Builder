@@ -18,7 +18,7 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
         ),
         frequency="1D",
     )
-    returns = returns.reindex(index_range.date, fill_value=1).fillna(1)
+    returns = returns.reindex(index_range.date).fillna(1) # fill_value argument has issues with different NaNs lol
     return returns
 
 
