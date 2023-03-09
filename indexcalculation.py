@@ -11,7 +11,6 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
     returns = (
         yf.Ticker(ticker).history(period="max")["Close"][start_date:].pct_change() + 1
     )
-    print(returns.index[0].tz)
     returns.index = returns.index.date
     index_range = mcal.date_range(
         mcal.get_calendar("NYSE").schedule(
@@ -79,4 +78,4 @@ def etf_returns(
     return df
 
 
-print(etf_returns({"RIVN": 0.5, "AAPL": 0.5}))
+# print(etf_returns({"RIVN": 0.5, "AAPL": 0.5}))
