@@ -1,54 +1,68 @@
-{% extends 'base.html' %} {% block head %}
+{% extends 'base.html' %} {% block head %} {{ super() }}
 <title>ETF 4 All</title>
+{% endblock %} {% block body %} {{ super() }}
+<form method="POST" action="/result">
+  <table class="symbol_table" id="symbol_table">
+    <tr>
+      <th>Symbol</th>
+      <th>Weight</th>
+    </tr>
+    <tr>
+      <td class="tdinput">
+        <input type="text" name="symbol" value="AAPL" />
+      </td>
+      <td class="tdinput black">
+        <input type="number" step="0.01" name="weight" value="0.5" /><input
+          type="button"
+          value="Delete Row"
+          onclick="deleteThis(this)"
+        />
+      </td>
+    </tr>
+  </table>
+  <button type="button" onclick="addRow()">Add Symbol</button>
+  <button type="button" onclick="removeRow()">Remove Symbol</button>
+  <input type="submit" />
+</form>
+<script>
+  function addRow() {
+    var table = document.getElementById("symbol_table");
+    var newRow = document.createElement("tr");
+    var newTD, newTD2, symbol, symbolInput, weight, weightInput;
 
-{% endblock %} {% block body %}
+    symbol = document.createElement("td");
+    symbol.setAttribute("class", "tdinput");
+    symbolInput = document.createElement("input");
+    symbolInput.setAttribute("type", "text");
+    symbolInput.setAttribute("name", "symbol");
+    symbol.appendChild(symbolInput);
+    newRow.appendChild(symbol);
 
-<body>
-  <form method="POST" action="/result">
-    <table id="myTable">
-      <tr>
-        <th>Symbol</th>
-        <th>Weight</th>
-      </tr>
-      <tr>
-        <td class="tdinput">
-          <input type="text" name="symbol" value="AAPL" />
-        </td>
-        <td class="tdinput black">
-          <input type="number" step="0.01" name="weight" value="0.5" />
-        </td>
-      </tr>
-    </table>
-    <button type="button" onclick="addRow()">Add Symbol</button>
-    <input type="submit" />
-  </form>
-  <br />
+    weight = document.createElement("td");
+    weight.setAttribute("class", "tdinput black");
+    weightInput = document.createElement("input");
+    weightInput.setAttribute("type", "number");
+    weightInput.setAttribute("name", "weight");
+    weightInput.setAttribute("step", "0.01");
+    weight.appendChild(weightInput);
 
-  <script>
-    function addRow() {
-      var table = document.getElementById("myTable");
-      var newRow = document.createElement("tr");
-      var newTD, newTD2, symbol, symbolInput, weight, weightInput;
+    var deleteButtonInput;
+    deleteButtonInput = document.createElement("input");
+    deleteButtonInput.setAttribute("type", "button");
+    deleteButtonInput.setAttribute("onclick", "deleteThis(this)");
+    deleteButtonInput.setAttribute("value", "Delete Row");
+    weight.appendChild(deleteButtonInput);
+    newRow.appendChild(weight);
 
-      //newRow.setAttribute("class", "unit-table");
-      symbol = document.createElement("td");
-      symbol.setAttribute("class", "tdinput");
-      symbolInput = document.createElement("input");
-      symbolInput.setAttribute("type", "text");
-      symbolInput.setAttribute("name", "symbol");
-      symbol.appendChild(symbolInput);
-      newRow.appendChild(symbol);
-
-      weight = document.createElement("td");
-      weight.setAttribute("class", "tdinput black");
-      weightInput = document.createElement("input");
-      weightInput.setAttribute("type", "number");
-      weightInput.setAttribute("name", "weight");
-      weightInput.setAttribute("step", "0.01");
-      weight.appendChild(weightInput);
-      newRow.appendChild(weight);
-      table.appendChild(newRow);
-    }
-  </script>
-  {% endblock %}
-</body>
+    table.appendChild(newRow);
+  }
+  function removeRow() {
+    var table = document.getElementById("symbol_table");
+    table.deleteRow(table.rows.length - 1);
+  }
+  function deleteThis(row) {
+    var parent = row.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
+  }
+</script>
+{% endblock %}

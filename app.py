@@ -15,7 +15,6 @@ def result():
     result = request.form.to_dict(flat=False)
     # total_weight = sum([float(w) for w in result["weight"]])
     total_weight = sum(eval(w) for w in result["weight"])
-    print(total_weight)
     print(
         etf_returns(
             {
@@ -25,6 +24,7 @@ def result():
         )
     )
     return render_template("index.html")
+
 
 if __name__ == "__main__":
 
