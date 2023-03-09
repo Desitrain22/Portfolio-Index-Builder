@@ -1,15 +1,21 @@
 import yfinance as yf
 import pandas as pd
-
+import pandas_market_calendars as mcal
 pd.set_option("display.precision", 12)
+
 
 
 def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02")):
     """Given a symbol and yfinance period, returns a series of daily returns (1 + %age) of the symbol over the course
     of the period"""
-    return (
-        yf.Ticker(ticker).history(period="max")["Close"][start_date:].pct_change() + 1
-    ).fillna(1)
+    returns = yf.Ticker(ticker).history(period="max")["Close"][start_date:].pct_change() + 1
+    returns.index = returns.index.date
+    index_range = mcal.date_range(mcal.get_calendar('NYSE').schedule(start_date=start_date, end_date=pd.Timestamp.today().floor('1D')), frequency='1D')
+    returns = returns.reindex(index_range.date, fill_value=1).fillna(1)
+    #returns.fillna(1).to_clipboard()
+    return(returns)#.reindex(index_range.date, fill_value=1)) # pd.bdate_range(start_date.floor('D'), pd.Timestamp.today().floor('D')), fill_value=1))
+    #returns.reindex(pd.bdate_range(start_date.floor('D'), pd.Timestamp.today().floor('D')), fill_value=1).to_clipboard()
+    return returns
 
 
 def weights(
@@ -55,7 +61,7 @@ def etf_returns(
 
     Note that this is under the behavior of daily targetted returns, and supports leverage. This does NOT account
     for dividend re-investment"""
-    df = pd.DataFrame()
+    df = pd.DataFrame()#index=pd.date_range(start_date.date(), pd.Timestamp.today().date()))
     for ticker in ticker_weights:
         df[ticker] = get_returns(ticker, start_date) * ticker_weights[ticker]
     df["ER"] = df.sum(axis=1)
@@ -66,10 +72,4 @@ def etf_returns(
     return df
 
 
-print(
-    etf_returns(
-        {"AAPL": 0.25, "LULU": 0.25, "TXN": 0.25, "TIPT": 0.25},
-        pd.Timestamp("2013-01-16"),
-        100,
-    )
-)
+print(etf_returns({'RIVN': 1}))
