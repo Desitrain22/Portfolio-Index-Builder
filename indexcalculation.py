@@ -71,7 +71,7 @@ def etf_returns(
     for ticker in ticker_weights:
         df[ticker] = get_returns(ticker, start_date) * ticker_weights[ticker]
     df["ER"] = df.sum(axis=1)
-    df["ER"][0] = index_base
+    df["ER"][0] = index_base #Seed the base amount for the rolling operation
     df["Index"] = (
         df["ER"].rolling(window=len(df), min_periods=1).apply(pd.Series.product)
     )

@@ -1,42 +1,58 @@
 {% extends 'base.html' %} {% block head %} {{ super() }}
 <title>ETF 4 All</title>
 {% endblock %} {% block body %} {{ super() }}
-<div class="symbol_selection">
-  <form method="POST" action="/result">
-    <table class="symbol_table" id="symbol_table">
-      <tr>
-        <th>Symbol</th>
-        <th>Weight</th>
-      </tr>
-      {% for set in default %}
-      <tr>
-        <td class="tdinput">
-          <input type="text" name="symbol" value="{{set[0]}}" />
-        </td>
-        <td class="tdinput black">
-          <input
-            type="number"
-            step="0.01"
-            name="weight"
-            value="{{set[1]}}"
-          /><input
-            type="button"
-            style="float: right"
-            value="Delete Row"
-            onclick="deleteThis(this)"
-          />
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    <div class="container">
-      <button type="button" onclick="addRow()">Add Symbol</button>
-      <button type="button" onclick="removeRow()">Remove Symbol</button>
-      <input type="submit" />
-    </div>
-  </form>
+<div class="symbol_selection" id="symbol_selection">
+  <table class="symbol_table" id="symbol_table">
+    <tr>
+      <th>Symbol</th>
+      <th>Weight</th>
+    </tr>
+    {% for set in default %}
+    <tr>
+      <td class="tdinput">
+        <input type="text" name="symbol" value="{{set[0]}}" />
+      </td>
+      <td class="tdinput black">
+        <input
+          type="number"
+          step="0.01"
+          name="weight"
+          value="{{set[1]}}"
+        /><input
+          type="button"
+          style="float: right"
+          value="Delete Row"
+          onclick="deleteThis(this)"
+        />
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <div class="container">
+    <button style="margin-right: 250px" type="button" onclick="addRow()">
+      Add Symbol
+    </button>
+    <button style="margin-right: 200px" type="button" onclick="removeRow()">
+      Remove Symbol
+    </button>
+    <button style="margin-right: 200px" type="button" onclick="resultCall()">
+      Submit
+    </button>
+  </div>
 </div>
 <script>
+  function resultCall() {
+    var data = document.getElementById("symbol_table");
+    console.log(data.value);
+
+    fetch("{{ url_for('result2') }}", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(data),
+      cache: "no-cache",
+      headers: new Headers({ "content-type": "application/json" }),
+    });
+  }
   function addRow() {
     var table = document.getElementById("symbol_table");
     var newRow = document.createElement("tr");

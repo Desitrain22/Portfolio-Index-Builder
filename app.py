@@ -1,6 +1,5 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify, make_response
 import random
-import pandas as pd
 from indexcalculation import etf_returns
 
 app = Flask(__name__)
@@ -61,6 +60,17 @@ def result():
     # return redirect('/')  # render_template("index.html")
 
 
-if __name__ == "__main__":
+@app.route("/result2", methods=["POST"])
+def result2():
+    req = request.get_json()
 
+    print(req)
+    print('here')
+
+    res = make_response(jsonify({"message": "JSON here"}), 200)
+
+    return res
+
+
+if __name__ == "__main__":
     app.run(debug=True)
