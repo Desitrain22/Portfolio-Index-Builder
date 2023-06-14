@@ -33,7 +33,6 @@ def index():
             ("ROCK", 3),
             ("LUV", 10),
             ("JOB", 10),
-            ("GLUU", 3),
             ("FROG", 5),
             ("COKE", 10),
             ("BBW", 69),
@@ -62,13 +61,18 @@ def result():
 
 @app.route("/result2", methods=["POST"])
 def result2():
-    req = request.get_json()
+    req = request.form.to_dict(flat=False)
+    total_weight = sum(float(w) for w in req["weight"])
+    result = etf_returns(
+        {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
+    )
+    print(result)
 
-    print(req)
-    print('here')
-
-    res = make_response(jsonify({"message": "JSON here"}), 200)
-
+    res = make_response(
+        jsonify({"dates": list(result.index), "values": list(result["Index"])}),
+        200,
+    )
+    print(res)
     return res
 
 

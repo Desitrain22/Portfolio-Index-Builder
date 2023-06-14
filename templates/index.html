@@ -2,32 +2,34 @@
 <title>ETF 4 All</title>
 {% endblock %} {% block body %} {{ super() }}
 <div class="symbol_selection" id="symbol_selection">
-  <table class="symbol_table" id="symbol_table">
-    <tr>
-      <th>Symbol</th>
-      <th>Weight</th>
-    </tr>
-    {% for set in default %}
-    <tr>
-      <td class="tdinput">
-        <input type="text" name="symbol" value="{{set[0]}}" />
-      </td>
-      <td class="tdinput black">
-        <input
-          type="number"
-          step="0.01"
-          name="weight"
-          value="{{set[1]}}"
-        /><input
-          type="button"
-          style="float: right"
-          value="Delete Row"
-          onclick="deleteThis(this)"
-        />
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
+  <form id="symbol_data">
+    <table class="symbol_table" id="symbol_table">
+      <tr>
+        <th>Symbol</th>
+        <th>Weight</th>
+      </tr>
+      {% for set in default %}
+      <tr>
+        <td class="tdinput">
+          <input type="text" name="symbol" value="{{set[0]}}" />
+        </td>
+        <td class="tdinput black">
+          <input
+            type="number"
+            step="0.01"
+            name="weight"
+            value="{{set[1]}}"
+          /><input
+            type="button"
+            style="float: right"
+            value="Delete Row"
+            onclick="deleteThis(this)"
+          />
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </form>
   <div class="container">
     <button style="margin-right: 250px" type="button" onclick="addRow()">
       Add Symbol
@@ -40,17 +42,72 @@
     </button>
   </div>
 </div>
-<script>
-  function resultCall() {
-    var data = document.getElementById("symbol_table");
-    console.log(data.value);
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    fetch("{{ url_for('result2') }}", {
+<div class="chart">
+  <h1 style="text-align: center" , float="right" , id="indexHeader">
+    {{name}}
+  </h1>
+  <canvas id="stockChart"></canvas>
+</div>
+
+<script>
+  async function resultCall() {
+    var data = document.getElementById("symbol_data");
+    data = new FormData(data);
+
+    var response = await fetch("{{ url_for('result2') }}", {
       method: "POST",
       credentials: "include",
-      body: JSON.stringify(data),
+      body: data,
       cache: "no-cache",
-      headers: new Headers({ "content-type": "application/json" }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const datesArray = data.dates;
+        const amountsArray = data.values;
+      })
+      .then();
+  }
+  function setGraph(responseData) {
+    var data = responseData.json();
+    const datesArray = data.dates;
+    const amountsArray = data.values;
+
+    var ctx = document.getElementById("stockChart").getContext("2d");
+    var stockChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: datesArray, // Array of dates
+        datasets: [
+          {
+            label: "Stock Price", // Label for the dataset
+            data: amountsArray, // Array of dollar amounts
+            backgroundColor: "rgba(0, 123, 255, 0.2)", // Optional background color
+            borderColor: "rgba(0, 123, 255, 1)", // Optional border color
+            borderWidth: 1, // Optional border width
+          },
+        ],
+      },
+      options: {
+        responsive: true, // Make the chart responsive
+        scales: {
+          x: {
+            display: true, // Display x-axis
+            title: {
+              display: true,
+              text: "Date", // x-axis label
+            },
+          },
+          y: {
+            display: true, // Display y-axis
+            title: {
+              display: true,
+              text: "Price", // y-axis label
+            },
+          },
+        },
+      },
     });
   }
   function addRow() {
@@ -93,7 +150,4 @@
     parent.parentNode.removeChild(parent);
   }
 </script>
-<div class="chart">
-  <h1 style="text-align: center" , float="right">{{name}}</h1>
-</div>
 {% endblock %}
