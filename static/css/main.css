@@ -51,3 +51,10 @@
     top: 12px;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+#stockChart {
+    width: 800px;
+    /* Adjust the width as needed */
+    height: 400px;
+    /* Adjust the height as needed */
+}

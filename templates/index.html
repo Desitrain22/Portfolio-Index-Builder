@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block head %} {{ super() }}
 <title>ETF 4 All</title>
 {% endblock %} {% block body %} {{ super() }}
-<div class="symbol_selection" id="symbol_selection">
+<div onload="resultCall()" class="symbol_selection" id="symbol_selection">
   <form id="symbol_data">
     <table class="symbol_table" id="symbol_table">
       <tr>
@@ -48,7 +48,8 @@
   <h1 style="text-align: center" , float="right" , id="indexHeader">
     {{name}}
   </h1>
-  <canvas id="stockChart"></canvas>
+
+  <canvas id="stockChart" width="800" height="800"></canvas>
 </div>
 
 <script>
@@ -56,58 +57,70 @@
     var data = document.getElementById("symbol_data");
     data = new FormData(data);
 
-    var response = await fetch("{{ url_for('result2') }}", {
+    document.getElementById("indexHeader").innerHTML = "Loading...";
+
+    var response = await fetch("{{ url_for('result') }}", {
       method: "POST",
       credentials: "include",
       body: data,
       cache: "no-cache",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const datesArray = data.dates;
-        const amountsArray = data.values;
-      })
-      .then();
+    }).then((response) => {
+      setGraph(response);
+    });
   }
-  function setGraph(responseData) {
-    var data = responseData.json();
-    const datesArray = data.dates;
-    const amountsArray = data.values;
 
-    var ctx = document.getElementById("stockChart").getContext("2d");
-    var stockChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: datesArray, // Array of dates
-        datasets: [
-          {
-            label: "Stock Price", // Label for the dataset
-            data: amountsArray, // Array of dollar amounts
-            backgroundColor: "rgba(0, 123, 255, 0.2)", // Optional background color
-            borderColor: "rgba(0, 123, 255, 1)", // Optional border color
-            borderWidth: 1, // Optional border width
-          },
-        ],
-      },
-      options: {
-        responsive: true, // Make the chart responsive
-        scales: {
-          x: {
-            display: true, // Display x-axis
-            title: {
-              display: true,
-              text: "Date", // x-axis label
+  async function setGraph(responseData) {
+    console.log(responseData);
+    var data = await responseData.json().then((data) => {
+      const datesArray = data.dates;
+
+      var formattedDatesArray = datesArray.map(function (date) {
+        var d = new Date(date);
+        return d.toLocaleDateString("en-US");
+      });
+      const amountsArray = data.values;
+      console.log(datesArray);
+      console.log(amountsArray);
+
+      var ctx = document.getElementById("stockChart").getContext("2d");
+
+      document.getElementById("indexHeader").innerHTML = "Your Index";
+      var stockChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: formattedDatesArray,
+          datasets: [
+            {
+              label: "ETF Price",
+              data: amountsArray,
+              backgroundColor: "rgba(0, 123, 255, 0.2)",
+              borderColor: "rgba(0, 123, 255, 1)",
+              borderWidth: 1,
+              pointRadius: 0,
             },
-          },
-          y: {
-            display: true, // Display y-axis
-            title: {
+          ],
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: true,
+          scales: {
+            x: {
               display: true,
-              text: "Price", // y-axis label
+              title: {
+                display: true,
+                text: "Date",
+              },
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: "Value",
+              },
             },
           },
         },
-      },
+      });
     });
   }
   function addRow() {

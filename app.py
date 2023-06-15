@@ -44,23 +44,6 @@ def index():
 
 @app.route("/result", methods=["POST"])
 def result():
-    result = request.form.to_dict(flat=False)
-    # total_weight = sum([float(w) for w in result["weight"]])
-    total_weight = sum(eval(w) for w in result["weight"])
-    print(
-        etf_returns(
-            {
-                result["symbol"][i]: float(result["weight"][i]) / total_weight
-                for i in range(len(result["symbol"]))
-            }
-        )
-    )
-    return index()
-    # return redirect('/')  # render_template("index.html")
-
-
-@app.route("/result2", methods=["POST"])
-def result2():
     req = request.form.to_dict(flat=False)
     total_weight = sum(float(w) for w in req["weight"])
     result = etf_returns(
@@ -69,7 +52,12 @@ def result2():
     print(result)
 
     res = make_response(
-        jsonify({"dates": list(result.index), "values": list(result["Index"])}),
+        jsonify(
+            {
+                "dates": list(result.index),
+                "values": list(result["Index"]),
+            }
+        ),
         200,
     )
     print(res)
