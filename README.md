@@ -30,4 +30,3 @@ Inspiration, code snippets, etc.
 
 - [awesome-readme](https://github.com/matiassingers/awesome-readme)
 - [DJIA Index Methodology](https://www.spglobal.com/spdji/en/documents/methodologies/methodology-dj-averages.pdf)
--
