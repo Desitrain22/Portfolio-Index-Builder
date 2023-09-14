@@ -24,15 +24,15 @@ def get_returns(ticker: str, start_date: pd.Timestamp = pd.Timestamp("2015-01-02
     return returns
 
 
-def weights(
+def get_adjusted_weights(
     ticker_weights: list[str], start_date: pd.Timestamp = pd.Timestamp("2015-01-02")
 ):
-    """Given a dictionary of symbols and initial weights, returns a dataframe of all the adjusted weights of
-    the portfolio over time. That is, the percentage of the portfolio each security takes over the course of
-    daily returns.
+    """Given a dictionary of symbols & initial weights, as well as a start date, returns a dataframe of all the
+    adjusted weights of the portfolio over time. That is, the percentage of the portfolio each security accounts 
+    for after considering the day's returns.
 
     .. code-block:: python
-        weights({"AAPL": 0.25, "WBA": 0.25, "CBOE": 0.5}, period="1y")
+        get_adjusted_weights({"AAPL": 0.25, "WBA": 0.25, "CBOE": 0.5}, period="1y")
 
     Note this is NOT fixed/rebalanced weights as most daily target indices pursue. This is to highlight the change in
     weights of an untouched portfolio
@@ -56,7 +56,7 @@ def weights(
     return df
 
 
-def etf_returns(
+def portfolio_returns(
     ticker_weights: dict,
     start_date: pd.Timestamp = pd.Timestamp("2015-01-02", tz="America/New_York"),
     index_base: float = 100.0,
@@ -71,11 +71,12 @@ def etf_returns(
     for ticker in ticker_weights:
         df[ticker] = get_returns(ticker, start_date) * ticker_weights[ticker]
     df["ER"] = df.sum(axis=1)
-    df["ER"][0] = index_base #Seed the base amount for the rolling operation
+    df["ER"][0] = index_base  # Seed the base amount for the rolling operation
     df["Index"] = (
         df["ER"].rolling(window=len(df), min_periods=1).apply(pd.Series.product)
     )
     return df
 
 
-# print(etf_returns({"RIVN": 0.5, "AAPL": 0.5}))
+print(get_returns("AAPL"))
+print(portfolio_returns({"RIVN": 0.5, "AAPL": 0.5}))

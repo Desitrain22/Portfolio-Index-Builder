@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, jsonify, make_response
 import random
-from indexcalculation import etf_returns
+from indexcalculation import portfolio_returns
 
 app = Flask(__name__)
 
@@ -46,7 +46,7 @@ def index():
 def result():
     req = request.form.to_dict(flat=False)
     total_weight = sum(float(w) for w in req["weight"])
-    result = etf_returns(
+    result = portfolio_returns(
         {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
     )
     print(result)
