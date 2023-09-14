@@ -28,11 +28,11 @@ def get_adjusted_weights(
     ticker_weights: list[str], start_date: pd.Timestamp = pd.Timestamp("2015-01-02")
 ):
     """Given a dictionary of symbols & initial weights, as well as a start date, returns a dataframe of all the
-    adjusted weights of the portfolio over time. That is, the percentage of the portfolio each security accounts 
+    adjusted weights of the portfolio over time. That is, the percentage of the portfolio each security accounts
     for after considering the day's returns.
 
     .. code-block:: python
-        get_adjusted_weights({"AAPL": 0.25, "WBA": 0.25, "CBOE": 0.5}, period="1y")
+        get_adjusted_weights({"AAPL": 0.25, "WBA": 0.25, "CBOE": 0.5}, pd.Timestamp("2023-01-03))
 
     Note this is NOT fixed/rebalanced weights as most daily target indices pursue. This is to highlight the change in
     weights of an untouched portfolio
@@ -56,7 +56,7 @@ def get_adjusted_weights(
     return df
 
 
-def portfolio_returns(
+def index_returns(
     ticker_weights: dict,
     start_date: pd.Timestamp = pd.Timestamp("2015-01-02", tz="America/New_York"),
     index_base: float = 100.0,
@@ -78,5 +78,27 @@ def portfolio_returns(
     return df
 
 
-print(get_returns("AAPL"))
-print(portfolio_returns({"RIVN": 0.5, "AAPL": 0.5}))
+def portfolio_returns(
+    ticker_weights: dict,
+    start_date: pd.Timestamp = pd.Timestamp("2015-01-02", tz="America/New_York"),
+    index_base: float = 100.0,
+):
+    returns = pd.DataFrame()
+    for ticker in ticker_weights:
+        returns[ticker] = yf.Ticker(ticker).history(period="max")["Close"][start_date:]
+    returns.index = returns.index.date
+    index_range = mcal.date_range(
+        mcal.get_calendar("NYSE").schedule(
+            start_date=start_date, end_date=pd.Timestamp.today().floor("1D")
+        ),
+        frequency="1D",
+    )
+    returns = returns.reindex(index_range.date).fillna(1)
+
+    start_price = returns.iloc[0]
+    returns = returns.divide(start_price, axis="columns")
+    for ticker in ticker_weights:
+        returns[ticker] *= ticker_weights[ticker] * index_base
+
+    returns["Index Value"] = returns.sum(axis=1)
+    return returns

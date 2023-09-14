@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response
 import random
-from indexcalculation import portfolio_returns
+from indexcalculation import index_returns, portfolio_returns
 
 app = Flask(__name__)
 
@@ -46,7 +46,7 @@ def index():
 def result():
     req = request.form.to_dict(flat=False)
     total_weight = sum(float(w) for w in req["weight"])
-    result = portfolio_returns(
+    result = index_returns(
         {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
     )
     print(result)
