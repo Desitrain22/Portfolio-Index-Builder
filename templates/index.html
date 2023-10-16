@@ -49,7 +49,7 @@
     <button style="margin-right: 200px" type="button" onclick="removeRow()">
       Remove Symbol
     </button>
-    <button style="margin-right: 200px" type="button" onclick="update()">
+    <button style="margin-right: 200px" type="button" onclick="setUp()">
       Submit
     </button>
   </div>
@@ -67,81 +67,32 @@
 </div>
 
 <script>
-  setUp();
-
-  async function update() {
-    var data = document.getElementById("symbol_data");
-    data = new FormData(data);
-
-    document.getElementById("indexHeader").innerHTML = "Loading...";
-
-    var response = await fetch("{{ url_for('result') }}", {
-      method: "POST",
-      credentials: "include",
-      body: data,
-      cache: "no-cache",
-    }).then((response) => {
-      updateGraph(response);
-    });
-  }
-  async function updateGraph(responseData) {
-    console.log(responseData);
-    var data = await responseData.json().then((data) => {
-      const datesArray = data.dates;
-
-      var formattedDatesArray = datesArray.map(function (date) {
-        var d = new Date(date);
-        return d.toLocaleDateString("en-US");
-      });
-      const amountsArray = data.values;
-      console.log(datesArray);
-      console.log(amountsArray);
-
-      var ctx = new Chart(document.getElementById("stockChart"), {
-        type: "line",
-        data: {
-          labels: formattedDatesArray,
-          datasets: [
-            {
-              label: "ETF Price",
-              data: amountsArray,
-              backgroundColor: "rgba(0, 123, 255, 0.2)",
-              borderColor: "rgba(0, 123, 255, 1)",
-              borderWidth: 1,
-              pointRadius: 0,
-            },
-          ],
-        },
-        options: {
-          responsive: false,
-          maintainAspectRatio: true,
-          scales: {
-            x: {
-              display: true,
-              title: {
-                display: true,
-                text: "Date",
-              },
-            },
-            y: {
-              display: true,
-              title: {
-                display: true,
-                text: "Value",
-              },
-            },
+  var config = {
+    type: "line",
+    options: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: "Date",
           },
         },
-      });
-      ctx.destroy();
-      //console.log(ctx);
-      ctx.data.datasets[0].data = amountsArray;
-      ctx.data.labels = formattedDatesArray;
-      ctx.update();
-
-      document.getElementById("indexHeader").innerHTML = "Your Index";
-    });
-  }
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: "Value",
+          },
+        },
+      },
+    },
+  };
+  var stockCanvas = document.getElementById("stockChart");
+  var lineChart = new Chart(stockCanvas, config);
+  setUp();
 
   async function setUp() {
     var data = document.getElementById("symbol_data");
@@ -169,13 +120,10 @@
         return d.toLocaleDateString("en-US");
       });
       const amountsArray = data.values;
-      console.log(datesArray);
-      console.log(amountsArray);
-
+      lineChart.destroy();
       var ctx = document.getElementById("stockChart").getContext("2d");
 
-      document.getElementById("indexHeader").innerHTML = "Your Index";
-      var stockChart = new Chart(ctx, {
+      lineChart = new Chart(ctx, {
         type: "line",
         data: {
           labels: formattedDatesArray,
@@ -211,6 +159,8 @@
           },
         },
       });
+      lineChart.update();
+      lineChart.render();
     });
   }
   function addRow() {
