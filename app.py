@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify, make_response
 import random
+from flask import Flask, render_template, request, jsonify, make_response
 from indexcalculation import index_returns, portfolio_returns
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -49,11 +50,13 @@ def result():
     total_weight = sum(float(w) for w in req["weight"])
     if req["rebalance_type"] == ["index"]:
         result = index_returns(
-            {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
+            {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])},
+            start_date=pd.Timestamp(req["startDate"][0], tz="US/Pacific"),
         )
     else:
         result = portfolio_returns(
-            {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
+            {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])},
+            start_date=pd.Timestamp(req["startDate"][0], tz="US/Pacific"),
         )
     print(result)
 
