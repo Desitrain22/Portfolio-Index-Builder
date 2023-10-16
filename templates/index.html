@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block head %} {{ super() }}
 <title>Build Your Own ETF</title>
 {% endblock %} {% block body %} {{ super() }}
-<div onload="resultCall()" class="symbol_selection" id="symbol_selection">
+<div class="symbol_selection" id="symbol_selection">
   <form id="symbol_data">
     <table class="symbol_table" id="symbol_table">
       <tr>
@@ -29,6 +29,18 @@
       </tr>
       {% endfor %}
     </table>
+    <input
+      type="radio"
+      id="index"
+      name="rebalance_type"
+      value="index"
+      checked="checked"
+    />
+      <label for="html">Submit As Index (Rebalanced to weights daily)</label
+    ><br />
+    <input type="radio" id="index" name="rebalance_type" value="index" />
+      <label for="html">Submit As Portfolio (Buy and Hold!)</label><br />
+       
   </form>
   <div class="container">
     <button style="margin-right: 250px" type="button" onclick="addRow()">
@@ -37,7 +49,7 @@
     <button style="margin-right: 200px" type="button" onclick="removeRow()">
       Remove Symbol
     </button>
-    <button style="margin-right: 200px" type="button" onclick="resultCall()">
+    <button style="margin-right: 200px" type="button" onclick="update()">
       Submit
     </button>
   </div>
@@ -48,12 +60,90 @@
   <h1 style="text-align: center" , float="right" , id="indexHeader">
     {{name}}
   </h1>
+  <br />
 
+  <br />
   <canvas id="stockChart" width="800" height="800"></canvas>
 </div>
 
 <script>
-  async function resultCall() {
+  setUp();
+
+  async function update() {
+    var data = document.getElementById("symbol_data");
+    data = new FormData(data);
+
+    document.getElementById("indexHeader").innerHTML = "Loading...";
+
+    var response = await fetch("{{ url_for('result') }}", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+      cache: "no-cache",
+    }).then((response) => {
+      updateGraph(response);
+    });
+  }
+  async function updateGraph(responseData) {
+    console.log(responseData);
+    var data = await responseData.json().then((data) => {
+      const datesArray = data.dates;
+
+      var formattedDatesArray = datesArray.map(function (date) {
+        var d = new Date(date);
+        return d.toLocaleDateString("en-US");
+      });
+      const amountsArray = data.values;
+      console.log(datesArray);
+      console.log(amountsArray);
+
+      var ctx = new Chart(document.getElementById("stockChart"), {
+        type: "line",
+        data: {
+          labels: formattedDatesArray,
+          datasets: [
+            {
+              label: "ETF Price",
+              data: amountsArray,
+              backgroundColor: "rgba(0, 123, 255, 0.2)",
+              borderColor: "rgba(0, 123, 255, 1)",
+              borderWidth: 1,
+              pointRadius: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: true,
+          scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: "Date",
+              },
+            },
+            y: {
+              display: true,
+              title: {
+                display: true,
+                text: "Value",
+              },
+            },
+          },
+        },
+      });
+      ctx.destroy();
+      //console.log(ctx);
+      ctx.data.datasets[0].data = amountsArray;
+      ctx.data.labels = formattedDatesArray;
+      ctx.update();
+
+      document.getElementById("indexHeader").innerHTML = "Your Index";
+    });
+  }
+
+  async function setUp() {
     var data = document.getElementById("symbol_data");
     data = new FormData(data);
 
