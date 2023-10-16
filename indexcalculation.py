@@ -93,10 +93,11 @@ def portfolio_returns(
         ),
         frequency="1D",
     )
-    returns = returns.reindex(index_range.date).fillna(1)
+    returns = returns.reindex(index_range.date)  # .fillna(1)
+    returns = returns.bfill()
+    print(returns)
 
     start_price = returns.iloc[0]
-    print(returns.iloc[0])
     returns = returns.divide(start_price, axis="columns")
     for ticker in ticker_weights:
         returns[ticker] *= ticker_weights[ticker] * index_base
