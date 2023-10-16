@@ -46,7 +46,7 @@ def index():
 def result():
     req = request.form.to_dict(flat=False)
     total_weight = sum(float(w) for w in req["weight"])
-    result = index_returns(
+    result = index(
         {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
     )
     print(result)

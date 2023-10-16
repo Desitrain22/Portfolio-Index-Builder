@@ -96,9 +96,10 @@ def portfolio_returns(
     returns = returns.reindex(index_range.date).fillna(1)
 
     start_price = returns.iloc[0]
+    print(returns.iloc[0])
     returns = returns.divide(start_price, axis="columns")
     for ticker in ticker_weights:
         returns[ticker] *= ticker_weights[ticker] * index_base
 
-    returns["Index Value"] = returns.sum(axis=1)
+    returns["Index"] = returns.sum(axis=1)
     return returns
