@@ -38,7 +38,7 @@
     />
       <label for="html">Submit As Index (Rebalanced to weights daily)</label
     ><br />
-    <input type="radio" id="index" name="rebalance_type" value="index" />
+    <input type="radio" id="index" name="rebalance_type" value="portfolio" />
       <label for="html">Submit As Portfolio (Buy and Hold!)</label><br />
        
   </form>
@@ -49,7 +49,7 @@
     <button style="margin-right: 200px" type="button" onclick="removeRow()">
       Remove Symbol
     </button>
-    <button style="margin-right: 200px" type="button" onclick="setUp()">
+    <button style="margin-right: 200px" type="button" onclick="update()">
       Submit
     </button>
   </div>
@@ -92,9 +92,9 @@
   };
   var stockCanvas = document.getElementById("stockChart");
   var lineChart = new Chart(stockCanvas, config);
-  setUp();
+  update();
 
-  async function setUp() {
+  async function update() {
     var data = document.getElementById("symbol_data");
     data = new FormData(data);
 
@@ -108,6 +108,8 @@
     }).then((response) => {
       setGraph(response);
     });
+
+    document.getElementById("indexHeader").innerHTML = "Your Index";
   }
 
   async function setGraph(responseData) {

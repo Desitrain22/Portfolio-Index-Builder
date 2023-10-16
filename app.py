@@ -47,7 +47,7 @@ def result():
     req = request.form.to_dict(flat=False)
     print(req)
     total_weight = sum(float(w) for w in req["weight"])
-    if req["rebalance_type"] == "index":
+    if req["rebalance_type"] == ["index"]:
         result = index_returns(
             {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])}
         )
