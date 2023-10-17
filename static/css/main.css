@@ -1,12 +1,12 @@
 .symbol_selection {
     font-family: Arial, Helvetica, sans-serif;
-    width: 50%
+    width: 60%
 }
 
 .symbol_table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    width: 90%;
     table-layout: fixed;
 }
 
@@ -53,8 +53,6 @@
 }
 
 #stockChart {
-    width: 800px;
-    /* Adjust the width as needed */
+    width: 750px;
     height: 400px;
-    /* Adjust the height as needed */
 }

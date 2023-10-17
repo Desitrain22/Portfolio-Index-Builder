@@ -11,7 +11,7 @@
       <tr>
         <th>Index Name</th>
         <th class="tdinput black">
-          <input type="text" value="{{name}}" />
+          <input type="text" id="index_name" value="{{name}}" />
         </th>
       </tr>
 
@@ -128,7 +128,8 @@
       setGraph(response);
     });
 
-    document.getElementById("indexHeader").innerHTML = "Your Index";
+    document.getElementById("indexHeader").innerHTML =
+      document.getElementById("index_name").value;
   }
 
   async function setGraph(responseData) {
