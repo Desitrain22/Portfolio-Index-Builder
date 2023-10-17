@@ -9,6 +9,13 @@
         <th>Weight</th>
       </tr>
       <tr>
+        <th>Index Name</th>
+        <th class="tdinput black">
+          <input type="text" value="{{name}}" />
+        </th>
+      </tr>
+
+      <tr>
         <td>Start Date</td>
         <td class="tdinput">
           <input type="date" name="startDate" value="2015-01-02" />
@@ -17,7 +24,13 @@
       {% for set in default %}
       <tr>
         <td class="tdinput">
-          <input type="text" name="symbol" value="{{set[0]}}" />
+          <select name="symbol">
+            {% for symbol, name in symbols.items() %} {% if set[0] == name %}
+            <option value="{{name}}" selected>{{ symbol }}</option>
+            {% else %}
+            <option value="{{name}}">{{ symbol }}</option>
+            {% endif %} {% endfor%}
+          </select>
         </td>
         <td class="tdinput black">
           <input

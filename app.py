@@ -1,6 +1,6 @@
 import random
 from flask import Flask, render_template, request, jsonify, make_response
-from indexcalculation import index_returns, portfolio_returns
+from indexcalculation import index_returns, portfolio_returns, get_symbol_universe
 import pandas as pd
 
 app = Flask(__name__)
@@ -26,7 +26,7 @@ def index():
             ("PTON", 5),
         ],
         [
-            "Symbolz",
+            "Funny Symbolz",
             ("PZZA", 3),
             ("YUM", 3),
             ("SHOO", 10),
@@ -40,7 +40,8 @@ def index():
         ],
     ]
     set = samples[random.randint(0, len(samples) - 1)]
-    return render_template("index.html", name=set[0], default=set[1:])
+    symbols = get_symbol_universe()
+    return render_template("index.html", name=set[0], default=set[1:], symbols=symbols)
 
 
 @app.route("/result", methods=["POST"])

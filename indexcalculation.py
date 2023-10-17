@@ -95,7 +95,6 @@ def portfolio_returns(
     )
     returns = returns.reindex(index_range.date)  # .fillna(1)
     returns = returns.bfill()
-    print(returns)
 
     start_price = returns.iloc[0]
     returns = returns.divide(start_price, axis="columns")
@@ -104,3 +103,13 @@ def portfolio_returns(
 
     returns["Index"] = returns.sum(axis=1)
     return returns
+
+
+def get_symbol_universe():
+    ticker_universe = pd.read_json("https://www.sec.gov/files/company_tickers.json")
+    return dict(
+        zip(
+            ticker_universe.loc["ticker"] + ", " + ticker_universe.loc["title"],
+            ticker_universe.loc["ticker"],
+        )
+    )
