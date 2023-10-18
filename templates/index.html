@@ -76,157 +76,157 @@
   {% endfor%}
 </datalist>
 
-  <div class="chart">
-    <h1 style="text-align: center" , float="right" , id="indexHeader">
-      {{name}}
-    </h1>
-    <br />
+<div class="chart">
+  <h1 style="text-align: center" , float="right" , id="indexHeader">
+    {{name}}
+  </h1>
+  <br />
 
-    <br />
-    <canvas id="stockChart" width="800" height="800"></canvas>
-  </div>
+  <br />
+  <canvas id="stockChart" width="800" height="800"></canvas>
+</div>
 
-  <script>
-    var config = {
-      type: "line",
-      options: {
-        responsive: false,
-        maintainAspectRatio: true,
-        scales: {
-          x: {
+<script>
+  var config = {
+    type: "line",
+    options: {
+      responsive: false,
+      maintainAspectRatio: true,
+      scales: {
+        x: {
+          display: true,
+          title: {
             display: true,
-            title: {
-              display: true,
-              text: "Date",
-            },
+            text: "Date",
           },
-          y: {
+        },
+        y: {
+          display: true,
+          title: {
             display: true,
-            title: {
-              display: true,
-              text: "Value",
-            },
+            text: "Value",
           },
         },
       },
-    };
-    var stockCanvas = document.getElementById("stockChart");
-    var lineChart = new Chart(stockCanvas, config);
-    update();
+    },
+  };
+  var stockCanvas = document.getElementById("stockChart");
+  var lineChart = new Chart(stockCanvas, config);
+  update();
 
-    async function update() {
-      var data = document.getElementById("symbol_data");
-      data = new FormData(data);
+  async function update() {
+    var data = document.getElementById("symbol_data");
+    data = new FormData(data);
 
-      document.getElementById("indexHeader").innerHTML = "Loading...";
+    document.getElementById("indexHeader").innerHTML = "Loading...";
 
-      var response = await fetch("{{ url_for('result') }}", {
-        method: "POST",
-        credentials: "include",
-        body: data,
-        cache: "no-cache",
-      }).then((response) => {
-        setGraph(response);
+    var response = await fetch("{{ url_for('result') }}", {
+      method: "POST",
+      credentials: "include",
+      body: data,
+      cache: "no-cache",
+    }).then((response) => {
+      setGraph(response);
+    });
+
+    document.getElementById("indexHeader").innerHTML =
+      document.getElementById("index_name").value;
+  }
+
+  async function setGraph(responseData) {
+    console.log(responseData);
+    var data = await responseData.json().then((data) => {
+      const datesArray = data.dates;
+
+      var formattedDatesArray = datesArray.map(function (date) {
+        var d = new Date(date);
+        return d.toLocaleDateString("en-US");
       });
+      const amountsArray = data.values;
+      lineChart.destroy();
+      var ctx = document.getElementById("stockChart").getContext("2d");
 
-      document.getElementById("indexHeader").innerHTML =
-        document.getElementById("index_name").value;
-    }
-
-    async function setGraph(responseData) {
-      console.log(responseData);
-      var data = await responseData.json().then((data) => {
-        const datesArray = data.dates;
-
-        var formattedDatesArray = datesArray.map(function (date) {
-          var d = new Date(date);
-          return d.toLocaleDateString("en-US");
-        });
-        const amountsArray = data.values;
-        lineChart.destroy();
-        var ctx = document.getElementById("stockChart").getContext("2d");
-
-        lineChart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: formattedDatesArray,
-            datasets: [
-              {
-                label: "ETF Price",
-                data: amountsArray,
-                backgroundColor: "rgba(0, 123, 255, 0.2)",
-                borderColor: "rgba(0, 123, 255, 1)",
-                borderWidth: 1,
-                pointRadius: 0,
-              },
-            ],
-          },
-          options: {
-            responsive: false,
-            maintainAspectRatio: true,
-            scales: {
-              x: {
+      lineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: formattedDatesArray,
+          datasets: [
+            {
+              label: "ETF Price",
+              data: amountsArray,
+              backgroundColor: "rgba(0, 123, 255, 0.2)",
+              borderColor: "rgba(0, 123, 255, 1)",
+              borderWidth: 1,
+              pointRadius: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: false,
+          maintainAspectRatio: true,
+          scales: {
+            x: {
+              display: true,
+              title: {
                 display: true,
-                title: {
-                  display: true,
-                  text: "Date",
-                },
+                text: "Date",
               },
-              y: {
+            },
+            y: {
+              display: true,
+              title: {
                 display: true,
-                title: {
-                  display: true,
-                  text: "Value",
-                },
+                text: "Value",
               },
             },
           },
-        });
-        lineChart.update();
-        lineChart.render();
+        },
       });
-    }
-    function addRow() {
-      var table = document.getElementById("symbol_table");
-      var newRow = document.createElement("tr");
-      var newTD, newTD2, symbol, symbolInput, weight, weightInput;
+      lineChart.update();
+      lineChart.render();
+    });
+  }
+  function addRow() {
+    var table = document.getElementById("symbol_table");
+    var newRow = document.createElement("tr");
+    var newTD, newTD2, symbol, symbolInput, weight, weightInput;
 
-      symbol = document.createElement("td");
-      symbol.setAttribute("class", "tdinput");
-      symbolInput = document.createElement("input");
-      symbolInput.setAttribute("type", "text");
-      symbolInput.setAttribute("name", "symbol");
-      symbolInput.setAttribute("list", "valid_symbols")
-      symbol.appendChild(symbolInput);
-      newRow.appendChild(symbol);
+    symbol = document.createElement("td");
+    symbol.setAttribute("class", "tdinput");
+    symbolInput = document.createElement("input");
+    symbolInput.setAttribute("type", "text");
+    symbolInput.setAttribute("name", "symbol");
+    symbolInput.setAttribute("list", "valid_symbols")
+    symbol.appendChild(symbolInput);
+    newRow.appendChild(symbol);
 
-      weight = document.createElement("td");
-      weight.setAttribute("class", "tdinput black");
-      weightInput = document.createElement("input");
-      weightInput.setAttribute("type", "number");
-      weightInput.setAttribute("name", "weight");
-      weightInput.setAttribute("step", "0.01");
-      weight.appendChild(weightInput);
+    weight = document.createElement("td");
+    weight.setAttribute("class", "tdinput black");
+    weightInput = document.createElement("input");
+    weightInput.setAttribute("type", "number");
+    weightInput.setAttribute("name", "weight");
+    weightInput.setAttribute("step", "0.01");
+    weight.appendChild(weightInput);
 
-      var deleteButtonInput;
-      deleteButtonInput = document.createElement("input");
-      deleteButtonInput.setAttribute("type", "button");
-      deleteButtonInput.setAttribute("onclick", "deleteThis(this)");
-      deleteButtonInput.setAttribute("style", "float: right");
-      deleteButtonInput.setAttribute("value", "Delete Row");
-      weight.appendChild(deleteButtonInput);
-      newRow.appendChild(weight);
+    var deleteButtonInput;
+    deleteButtonInput = document.createElement("input");
+    deleteButtonInput.setAttribute("type", "button");
+    deleteButtonInput.setAttribute("onclick", "deleteThis(this)");
+    deleteButtonInput.setAttribute("style", "float: right");
+    deleteButtonInput.setAttribute("value", "Delete Row");
+    weight.appendChild(deleteButtonInput);
+    newRow.appendChild(weight);
 
-      table.appendChild(newRow);
-    }
-    function removeRow() {
-      var table = document.getElementById("symbol_table");
-      table.deleteRow(table.rows.length - 1);
-    }
-    function deleteThis(row) {
-      var parent = row.parentNode.parentNode;
-      parent.parentNode.removeChild(parent);
-    }
-  </script>
-  {% endblock %}
-</datalist>
+    table.appendChild(newRow);
+  }
+  function removeRow() {
+    var table = document.getElementById("symbol_table");
+    table.deleteRow(table.rows.length - 1);
+  }
+  function deleteThis(row) {
+    var parent = row.parentNode.parentNode;
+    parent.parentNode.removeChild(parent);
+  }
+</script>
+{% endblock %}
+
