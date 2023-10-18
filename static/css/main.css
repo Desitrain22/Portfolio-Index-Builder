@@ -1,11 +1,18 @@
+@viewport {
+    width: device-width;
+    zoom: 1.0;
+}
+
 .symbol_selection {
     font-family: Arial, Helvetica, sans-serif;
+    min-width: 400px;
     width: 60%
 }
 
 .symbol_table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
+    min-width: 400px;
     width: 90%;
     table-layout: fixed;
 }
@@ -41,6 +48,7 @@
 }
 
 .chart {
+    min-width: 400px;
     height: 90px;
     width: 45%;
     border: 2px solid #04aa6d;
