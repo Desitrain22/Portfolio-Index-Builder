@@ -1,15 +1,12 @@
 .container {
     display: flex;
-    flex-wrap: wrap;
+    gap: 1rem;
     justify-content: space-between;
-    /* Add space between the divs */
 }
 
-/* Media Query for Mobile Formatting */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
     .container {
         flex-direction: column;
-        /* Stack the divs vertically on smaller screens */
     }
 }
 
@@ -69,6 +66,6 @@
 
 .aboutMe {
     font-family: Arial, Helvetica, sans-serif;
-    max-width: 50%;
+    max-width: 100%;
     text-align: left
 }

@@ -68,6 +68,7 @@
         Submit
       </button>
     </div>
+    
   </div>
 
   <div class="chart">
@@ -80,15 +81,8 @@
     <canvas id="stockChart" width="800px" height="800px"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </div>
-</div>
 
-<datalist id="valid_symbols">
-  {% for symbol, name in symbols.items() %}
-    <option value="{{name}}">{{ symbol }}</option>
-  {% endfor%}
-</datalist>
-
-<div class="aboutMe">
+  <div class="aboutMe">
   
     <h3>Indexing vs Portfolios vs ETFs</h3>
     <p>Anyone who's worked in the indexing or ETF space knows that ETF's are not so simple; in reality, this is an <i>indexing</i> platform. What you make is an index that tracks an equity basket. I wanted to help democratize this space, especially with the amount
@@ -103,7 +97,8 @@
       They can be dollar amount, or any weight you desire</p>
     <li><a href="https://www.github.com/Desitrain22" target = "_blank">GitHub</a></li>
     <li><a href="https://www.linkedin.com/in/NealPareshPatel" target = "_blank">LinkedIn</a></li>
-  </ul>
+  </div>
+  
   <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
   <script>
     kofiWidgetOverlay.draw('nealpatel', {
@@ -112,13 +107,19 @@
       'floating-chat.donateButton.background-color': '#00b9fe',
       'floating-chat.donateButton.text-color': '#fff'
     });
-  </script>
+  </script>  
+
+  <datalist id="valid_symbols">
+    {% for symbol, name in symbols.items() %}
+      <option value="{{name}}">{{ symbol }}</option>
+    {% endfor%}
+  </datalist>
 </div>
 <script>
   var config = {
     type: "line",
     options: {
-      responsive: false,
+      responsive: true,
       maintainAspectRatio: true,
       scales: {
         x: {
@@ -190,7 +191,7 @@
           ],
         },
         options: {
-          responsive: false,
+          responsive: true,
           maintainAspectRatio: true,
           scales: {
             x: {
