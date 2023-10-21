@@ -1,73 +1,92 @@
 {% extends 'base.html' %} {% block head %} {{ super() }}
 <title>Make Your ETF</title>
 {% endblock %} {% block body %} {{ super() }}
-<div class="symbol_selection" id="symbol_selection">
-  <form id="symbol_data">
-    <table class="symbol_table" id="symbol_table">
-      <tr>
-        <th>Symbol</th>
-        <th>Weight</th>
-      </tr>
-      <tr>
-        <th>Index Name</th>
-        <th class="tdinput black">
-          <input type="text" id="index_name" value="{{name}}" />
-        </th>
-      </tr>
+<div class="container">
+  <div class="symbol_selection" id="symbol_selection">
+    <form id="symbol_data">
+      <table class="symbol_table" id="symbol_table">
+        <tr>
+          <th>Symbol</th>
+          <th>Weight</th>
+        </tr>
+        <tr>
+          <th>Index Name</th>
+          <th class="tdinput black">
+            <input type="text" id="index_name" value="{{name}}" />
+          </th>
+        </tr>
 
-      <tr>
-        <td>Start Date</td>
-        <td class="tdinput">
-          <input type="date" name="startDate" value="2015-01-02" />
-        </td>
-      </tr>
-      {% for set in default %}
-      <tr>
-        <td class="tdinput">
-          <input list="valid_symbols" name="symbol" value="{{set[0]}}"></input>
-           
-        </td>
-        <td class="tdinput black">
-          <input
-            type="number"
-            step="0.01"
-            name="weight"
-            value="{{set[1]}}"
-          /><input
-            type="button"
-            style="float: right"
-            value="Delete Row"
-            onclick="deleteThis(this)"
-          />
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-    <input
-      type="radio"
-      id="index"
-      name="rebalance_type"
-      value="index"
-      checked="checked"
-    />
-      <label for="html">Submit As Index (Rebalanced to weights daily)</label
-    ><br />
-    <input type="radio" id="index" name="rebalance_type" value="portfolio" />
-      <label for="html">Submit As Portfolio (Buy and Hold!)</label><br />
-       
-  </form>
-  <div class="container">
-    <button style="margin-right: 250px" type="button" onclick="addRow()">
-      Add Symbol
-    </button>
-    <button style="margin-right: 200px" type="button" onclick="removeRow()">
-      Remove Symbol
-    </button>
-    <button style="margin-right: 200px" type="button" onclick="update()">
-      Submit
-    </button>
+        <tr>
+          <td>Start Date</td>
+          <td class="tdinput">
+            <input type="date" name="startDate" value="2015-01-02" />
+          </td>
+        </tr>
+        {% for set in default %}
+        <tr>
+          <td class="tdinput">
+            <input list="valid_symbols" name="symbol" value="{{set[0]}}"></input>
+            
+          </td>
+          <td class="tdinput black">
+            <input
+              type="number"
+              step="0.01"
+              name="weight"
+              value="{{set[1]}}"
+            /><input
+              type="button"
+              style="float: right"
+              value="Delete Row"
+              onclick="deleteThis(this)"
+            />
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <input
+        type="radio"
+        id="index"
+        name="rebalance_type"
+        value="index"
+        checked="checked"
+      />
+        <label for="html">Submit As Index (Rebalanced to weights daily)</label
+      ><br />
+      <input type="radio" id="index" name="rebalance_type" value="portfolio" />
+        <label for="html">Submit As Portfolio (Buy and Hold!)</label><br />
+         
+    </form>
+    <div>
+      <button style="float: Left" type="button" onclick="addRow()">
+        Add Symbol
+      </button>
+      <button style="float: Left" type="button" onclick="removeRow()">
+        Remove Symbol
+      </button>
+      <button style="float: Left" type="button" onclick="update()">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <div class="chart">
+    <h1 style="text-align: center" , float="right" , id="indexHeader">
+      {{name}}
+    </h1>
+    <br />
+
+    <br />
+    <canvas id="stockChart" width="800px" height="800px"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </div>
 </div>
+
+<datalist id="valid_symbols">
+  {% for symbol, name in symbols.items() %}
+    <option value="{{name}}">{{ symbol }}</option>
+  {% endfor%}
+</datalist>
 
 <div class="aboutMe">
   
@@ -95,25 +114,6 @@
     });
   </script>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<datalist id="valid_symbols">
-  {% for symbol, name in symbols.items() %}
-    <option value="{{name}}">{{ symbol }}</option>
-  {% endfor%}
-</datalist>
-
-<div class="chart">
-  <h1 style="text-align: center" , float="right" , id="indexHeader">
-    {{name}}
-  </h1>
-  <br />
-
-  <br />
-  <canvas id="stockChart" width="800" height="800"></canvas>
-</div>
-
 <script>
   var config = {
     type: "line",

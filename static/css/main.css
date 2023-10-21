@@ -1,14 +1,38 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* Add space between the divs */
+}
+
+/* Media Query for Mobile Formatting */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        /* Stack the divs vertically on smaller screens */
+    }
+}
+
+.chart {
+    flex: 1;
+    max-width: 40%;
+    border: 2px solid #04aa6d;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
 .symbol_selection {
     font-family: Arial, Helvetica, sans-serif;
-    min-width: 400px;
-    width: 60%
+    flex: 1;
+    max-width: 50%
 }
 
 .symbol_table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    min-width: 400px;
-    width: 90%;
+    width: 100%;
     table-layout: fixed;
 }
 
@@ -39,24 +63,12 @@
     position: center;
     padding-top: 10px;
     display: table-cell;
-    text-align: center;
 }
 
-.chart {
-    min-width: 400px;
-    height: 90px;
-    width: 45%;
-    border: 2px solid #04aa6d;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    right: 0;
-    position: fixed;
-    top: 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    float: right;
-}
+
 
 .aboutMe {
     font-family: Arial, Helvetica, sans-serif;
-    max-width: 800px;
+    max-width: 50%;
+    text-align: left
 }
