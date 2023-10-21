@@ -88,7 +88,7 @@
       {{name}}
     </h1>
     <br />
-    <canvas id="stockChart" width="800px" height="400px"></canvas>
+    <canvas id="stockChart" width="800px" height="600px"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </div>
 
@@ -169,6 +169,9 @@
         return d.toLocaleDateString("en-US");
       });
       const amountsArray = data.values;
+      const spyArray = data.spy;
+      const qqqArray = data.qqq;
+
       lineChart.destroy();
       var ctx = document.getElementById("stockChart").getContext("2d");
 
@@ -178,14 +181,22 @@
           labels: formattedDatesArray,
           datasets: [
             {
-              label: "ETF Price",
+              label: "Your Index",
               data: amountsArray,
               backgroundColor: "rgba(0, 123, 255, 0.2)",
               borderColor: "rgba(0, 123, 255, 1)",
               borderWidth: 1,
               pointRadius: 0,
             },
-          ],
+            {
+              label: "SPY",
+              data: spyArray,
+              backgroundColor: "rgba(220, 20, 60, 0.2)",
+              borderColor: "rgba(220, 20, 60, 1)",
+              borderWidth: 1,
+              pointRadius: 0,
+            }
+          ]
         },
         options: {
           responsive: true,

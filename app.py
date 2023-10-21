@@ -59,13 +59,20 @@ def result():
             {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])},
             start_date=pd.Timestamp(req["startDate"][0], tz="US/Pacific"),
         )
-    print(result)
-
+    # print(result)
+    spy = portfolio_returns(
+        {"SPY": 1}, pd.Timestamp(req["startDate"][0], tz="US/Pacific")
+    )
+    qqq = portfolio_returns(
+        {"QQQ": 1}, pd.Timestamp(req["startDate"][0], tz="US/Pacific")
+    )
     res = make_response(
         jsonify(
             {
                 "dates": list(result.index),
                 "values": list(result["Index"]),
+                "spy": list(spy["Index"]),
+                "qqq": list(qqq["Index"]),
             }
         ),
         200,
