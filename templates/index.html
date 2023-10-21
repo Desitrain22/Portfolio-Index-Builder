@@ -51,53 +51,34 @@
         value="index"
         checked="checked"
       />
-        <label for="html">Submit As Index (Rebalanced to weights daily)</label
-      ><br />
-      <input type="radio" id="index" name="rebalance_type" value="portfolio" />
-        <label for="html">Submit As Portfolio (Buy and Hold!)</label><br />
-         
+      <label for="html">Submit As Index (Rebalanced to weights daily)</label>
+      <br />
+      <input type="radio" id="index" name="rebalance_type" value="portfolio"/>
+      <label for="html">Submit As Portfolio (Buy and Hold!)</label>
     </form>
-    <div>
-      <button style="float: Left" type="button" onclick="addRow()">
-        Add Symbol
-      </button>
-      <button style="float: Left" type="button" onclick="removeRow()">
-        Remove Symbol
-      </button>
-      <button style="float: Left" type="button" onclick="update()">
-        Submit
-      </button>
-    </div>
+
+    <button style="float: Left" type="button" onclick="addRow()">
+      Add Symbol
+    </button>
+    <button style="float: Left" type="button" onclick="removeRow()">
+      Remove Symbol
+    </button>
+    <button style="float: Left" type="button" onclick="update()">
+      Submit
+    </button>
     
   </div>
 
   <div class="chart">
-    <h1 style="text-align: center" , float="right" , id="indexHeader">
+    <h1 style="text-align: center", id="indexHeader">
       {{name}}
     </h1>
-    <br />
-
     <br />
     <canvas id="stockChart" width="800px" height="800px"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </div>
 
-  <div class="aboutMe">
   
-    <h3>Indexing vs Portfolios vs ETFs</h3>
-    <p>Anyone who's worked in the indexing or ETF space knows that ETF's are not so simple; in reality, this is an <i>indexing</i> platform. What you make is an index that tracks an equity basket. I wanted to help democratize this space, especially with the amount
-      of gatekeeping in quantitative finance. Currently, we support ACTIVELY LISTED symbols across the NYSE, NASDAQ, and AMEX universe of tickers, provided by the <a href="https://www.sec.gov/file/company-tickers" target="_blank">SEC</a>.</p>
-    <p>When calculating as an index, the weights are consistent across every day. That is, the index is rebalanced daily to account for changes in weights as a result of price action (a stock plummets to $0.01 will now be a significantly smaller portion of the portfolio)</p>
-    <p>When calculating as a portfolio, that's creating a "What if I bought _____, and held it?" scenario. In this form, no rebalancing is done, regardless of price action. The weights you set are the initial ratios, and no changes/"trades" will be done past the start date</p>
-
-    <h3>Hi, <a href="https://www.linkedin.com/in/NealPareshPatel" target = "_blank">I'm Neal Patel</a>, and I made this website</h3>
-    <p>As you can tell, I'm NOT a javascript dev; this was made using flask and lots of pandas! I'm an NYC based Quant/SWE <i>looking for my next role</i> <b>(I'm very laid off, plz hire me)</b> If you like this
-      website, or just want to talk <a href="https://www.instagram.com/p/CufrKnCuKmw/" target = "_blank">stand-up</a>, pokemon, or <a href="https://youtu.be/__rnjvkXZN8?t=214" target = "_blank">Chinese Yo-Yo</a> please hit me up on LinkedIn or <a href="mailto:nealpatel@nyu.edu" target = "_blank">e-mail!</a> 
-      <a href="https://github.com/Desitrain22/Portfolio-Index-Builder/blob/main/README.md" target = "_blank"> Here's</a> how this website works; note the weights don't have to add up to 100%! 
-      They can be dollar amount, or any weight you desire</p>
-    <li><a href="https://www.github.com/Desitrain22" target = "_blank">GitHub</a></li>
-    <li><a href="https://www.linkedin.com/in/NealPareshPatel" target = "_blank">LinkedIn</a></li>
-  </div>
   
   <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
   <script>
@@ -114,6 +95,22 @@
       <option value="{{name}}">{{ symbol }}</option>
     {% endfor%}
   </datalist>
+</div>
+<div class="aboutMe">
+  
+  <h3>Indexing vs Portfolios vs ETFs</h3>
+  <p>Anyone who's worked in the indexing or ETF space knows that ETF's are not so simple; in reality, this is an <i>indexing</i> platform. What you make is an index that tracks an equity basket. I wanted to help democratize this space, especially with the amount
+    of gatekeeping in quantitative finance. Currently, we support ACTIVELY LISTED symbols across the NYSE, NASDAQ, and AMEX universe of tickers, provided by the <a href="https://www.sec.gov/file/company-tickers" target="_blank">SEC</a>.</p>
+  <p>When calculating as an index, the weights are consistent across every day. That is, the index is rebalanced daily to account for changes in weights as a result of price action (a stock plummets to $0.01 will now be a significantly smaller portion of the portfolio)</p>
+  <p>When calculating as a portfolio, that's creating a "What if I bought _____, and held it?" scenario. In this form, no rebalancing is done, regardless of price action. The weights you set are the initial ratios, and no changes/"trades" will be done past the start date</p>
+
+  <h3>Hi, <a href="https://www.linkedin.com/in/NealPareshPatel" target = "_blank">I'm Neal Patel</a>, and I made this website</h3>
+  <p>As you can tell, I'm NOT a javascript dev; this was made using flask and lots of pandas! I'm an NYC based Quant/SWE <i>looking for my next role</i> <b>(I'm very laid off, plz hire me)</b> If you like this
+    website, or just want to talk <a href="https://www.instagram.com/p/CufrKnCuKmw/" target = "_blank">stand-up</a>, pokemon, or <a href="https://youtu.be/__rnjvkXZN8?t=214" target = "_blank">Chinese Yo-Yo</a> please hit me up on LinkedIn or <a href="mailto:nealpatel@nyu.edu" target = "_blank">e-mail!</a> 
+    <a href="https://github.com/Desitrain22/Portfolio-Index-Builder/blob/main/README.md" target = "_blank"> Here's</a> how this website works; note the weights don't have to add up to 100%! 
+    They can be dollar amount, or any weight you desire</p>
+  <li><a href="https://www.github.com/Desitrain22" target = "_blank">GitHub</a></li>
+  <li><a href="https://www.linkedin.com/in/NealPareshPatel" target = "_blank">LinkedIn</a></li>
 </div>
 <script>
   var config = {
