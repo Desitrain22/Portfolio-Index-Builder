@@ -106,7 +106,7 @@ def portfolio_returns(
 
 
 def get_symbol_universe():
-    ticker_universe = pd.read_json("https://www.sec.gov/files/company_tickers.json")
+    ticker_universe = pd.read_json("static/company_tickers.json")
     return dict(
         zip(
             ticker_universe.loc["ticker"] + ", " + ticker_universe.loc["title"],

@@ -40,7 +40,6 @@ def index():
         ],
     ]
     set = samples[random.randint(0, len(samples) - 1)]
-    symbols = get_symbol_universe()
     return render_template("index.html", name=set[0], default=set[1:], symbols=symbols)
 
 
@@ -59,7 +58,6 @@ def result():
             {s: float(w) / total_weight for s, w in zip(req["symbol"], req["weight"])},
             start_date=pd.Timestamp(req["startDate"][0], tz="US/Pacific"),
         )
-    # print(result)
     spy = portfolio_returns(
         {"SPY": 1}, pd.Timestamp(req["startDate"][0], tz="US/Pacific")
     )
@@ -82,4 +80,6 @@ def result():
 
 
 if __name__ == "__main__":
+    global symbols
+    symbols = get_symbol_universe()
     app.run(debug=True)
