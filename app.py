@@ -40,6 +40,7 @@ def index():
         ],
     ]
     set = samples[random.randint(0, len(samples) - 1)]
+    symbols = get_symbol_universe()
     return render_template("index.html", name=set[0], default=set[1:], symbols=symbols)
 
 
